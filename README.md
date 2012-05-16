@@ -17,22 +17,22 @@ The program has been tested on both Linux and Mac and compiles cleanly (no warni
 
 ## Usage
 
-   file_sets -max id [-h] [-v] [-s] [-o outfile] expression 
+    file_sets -max id [-h] [-v] [-s] [-o outfile] expression 
    
      -h                 help
      -v                 verbose
      -s                 shuffle (randomize) order of id's in output
      -o outfile         write output to outfile (otherwise stdout)
 
-   expression ::= ( expression )
+    expression ::= ( expression )
                 | I expession 
                 | expression binaryOp expession 
                 | file 
     binaryOp   ::= U | X | D 
     file       ::= <path to file>
-    
+     
     Expression examples: 
-    
+     
       I f1
       f1 U f2
       f1 D f2
