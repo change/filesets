@@ -58,7 +58,7 @@ The program has been tested on both Linux and Mac and compiles cleanly (no warni
 filesets is fast because it does not take an optimal Computer Science approach. It does this in three ways:
 
 1. Knowing that the range of possible set values (IDs) are integers: 0 < n <= MAX ID
-2. Representing a set with a vector (byte array) the size of MAX_ID. If ID is in the set then set[ID] = 1
+2. Representing a set with a vector (byte array) the size of MAX_ID. If ID is in the set then set[ID] == 1
 3. Performing set operation using an O(n) algorithm instead of O(log n)
 
 The algorithm for performing a union is: 
@@ -75,7 +75,7 @@ Implementing an algorithm that operates in O(log n) time requires using some sor
 
 It turns out that dynamically allocating the nodes of a Tree and managing insertions and deletions requires more CPU cycles than the naive vector approach.
 
-In addition, the memory utililzation is also higher. The naive approaches requires one byte per ID. A Tree data struct at least 12 bytes in a 32-bit OS and 20 bytes in a 64-bit OS. Presuming a MAX ID of 2**32 which can be represent a a unsigned 4 byte integer.
+In addition, the memory utililzation is also higher. The naive approaches requires one byte per ID. A Tree data structure at least 12 bytes in a 32-bit OS and 20 bytes in a 64-bit OS. Presuming a MAX ID of 2**32 which can be represent a a unsigned 4 byte integer.
 
     32-bit OS: 12 bytes = 4 bytes for the ID + 2 * 4 bytes for pointers to the left & right nodes
     64-bit OS: 20 bytes = 4 bytes for the ID + 2 * 8 bytes for pointers to the left & right nodes
@@ -83,5 +83,5 @@ In addition, the memory utililzation is also higher. The naive approaches requir
 
 ### Future Proofing
 
-As of May 16 2012, the maximum uer ID in the Change.org database is a around 20M. filesets has been tested using a maximum user ID of 2B. If the maximum user ID every becomes great enough that allocating the memory becomes a problem, then the program can be modified to utilize one bit per ID instead of one byte. (This will likely cause loading a set from file to be a bit slower, but actually make the set operations faster.) See: http://en.wikipedia.org/wiki/Bit_array
+As of May 16, 2012, the maximum uer ID in the Change.org database is a around 20M. filesets has been tested using a maximum user ID of 2B. If the maximum user ID every becomes great enough that allocating the memory becomes a problem, then the program can be modified to utilize one bit per ID instead of one byte. (This will likely cause loading a set from file to be a bit slower, but actually make the set operations faster.) See: http://en.wikipedia.org/wiki/Bit_array
 
