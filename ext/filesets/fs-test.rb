@@ -1,5 +1,7 @@
 #!/usr/bin/env ruby
 
+puts `pwd`
+
 MAX_ID_VAL = 20
 OUTFILE    = "/tmp/result.txt"
 
