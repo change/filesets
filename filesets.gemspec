@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name        = 'filesets'
-  s.version     = '0.0.0'
+  s.version     = '0.0.1'
   s.date        = '2012-05-17'
   s.summary     = "filesets: performs set operations on integers. Each file contains on set."
   s.description = "Blah..."
