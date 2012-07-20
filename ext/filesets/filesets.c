@@ -191,7 +191,7 @@ setRead(Set * s)
   /* open the input file */
   if ((fd = open (s->x.file, O_RDONLY)) < 0)
   {
-    fprintf (stderr, "\nERROR: can't open %s for reading \n\n", s->x.file);
+    fprintf (stderr, "\nfilesets: ERROR: can't open %s for reading \n\n", s->x.file);
     exit(-1);
   }
 
@@ -211,7 +211,7 @@ setRead(Set * s)
     /* mmap the input file */
     srcBase = mmap (0, statBuf.st_size, PROT_READ,  MAP_SHARED, fd, 0);
     if (srcBase == (char *) -1)
-      fprintf (stderr, "ERROR: mmap error for input file: %s \n", s->x.file);
+      fprintf (stderr, "filesets: ERROR: mmap error for input file: %s \n", s->x.file);
 
     srcCurr = srcBase;
     srcEnd  = srcBase + statBuf.st_size;
@@ -464,7 +464,7 @@ stackNew (void)
   s = malloc (sizeof(Stack));
   if (s == NULL)
   {
-    fprintf (stderr, "ERROR: stackNew() can't malloc() %lu bytes\n", sizeof(Stack));
+    fprintf (stderr, "filesets: ERROR: stackNew() can't malloc() %lu bytes\n", sizeof(Stack));
     exit(-1);
   }
   memset(s, 0, sizeof(Stack));
@@ -706,8 +706,8 @@ convertToPostfix (const char *input, Stack * outputStack)
        */
       while ( ! stackEmpty (opStack))
       {
-	sc = (uint64) stackPeek (opStack);
-	if (sc == '(')
+        sc = (uint64) stackPeek (opStack);
+        if (sc == '(')
         {
           pe = TRUE;
           break;
@@ -719,7 +719,7 @@ convertToPostfix (const char *input, Stack * outputStack)
       /* mismatched paren's if the opStack empties without a left paren */
       if (pe == FALSE) {
         fprintf (stderr, "1: Error: parentheses mismatched\n");
-	stackDump (opStack);
+        stackDump (opStack);
         return FALSE;
       }
 
@@ -792,8 +792,8 @@ execute (Stack * input)
         s1 = setInvert (stackPop (opStack)); 
       else /* U, X, D */
       {
-	s2 = stackPop(opStack);
-	s1 = stackPop(opStack);
+        s2 = stackPop(opStack);
+        s1 = stackPop(opStack);
 
         switch (tok->x.operator) 
         {
@@ -833,7 +833,7 @@ execute (Stack * input)
     if (s1->type != SET)
     {
       fprintf (stderr, "execute(): result != a Set\n");
-      exit(-1);
+      exit (-1);
     }
 
     return ((Set * ) s1);
@@ -842,7 +842,24 @@ execute (Stack * input)
   /* Anything but one value on the output stack is an error. */
   return NULL;
 }
- 
+
+char *
+cmdLine (int argc, char *argv[])
+{
+  int i;
+  char * buf;
+
+  buf = malloc(MAX_EXP_LEN);
+  memset(buf, 0, MAX_EXP_LEN);
+
+  for (i = 0; i < argc; i++) {
+    strcat (buf, argv[i]);
+    strcat (buf, " ");
+  }
+
+  return (buf);
+}
+
 int 
 main (int argc, char *argv[]) 
 {
@@ -886,7 +903,7 @@ main (int argc, char *argv[])
       i++;
       if ((outFile = fopen(argv[i], "w")) == NULL)
       {
-        fprintf (stderr, "\nERROR: Can't open output file: %s\n\n", argv[i]);
+        fprintf (stderr, "\nfilesets: ERROR: Can't open output file: %s\n\n", argv[i]);
         usage();
       }
       continue;
@@ -898,7 +915,7 @@ main (int argc, char *argv[])
       MaxSetVal = strtol(argv[i], NULL, 10);
       if (MaxSetVal == 0 || MaxSetVal == UINT_MAX)
       {
-        fprintf (stderr, "\nERROR: Max Id must be an integer greater than zero.\n");
+        fprintf (stderr, "\nfilesets: ERROR: Max Id must be an integer greater than zero.\n");
         usage();
       }
       continue;
@@ -912,6 +929,12 @@ main (int argc, char *argv[])
   }
 
   if (Verbose) fprintf (stderr, "input: %s\n", input);
+
+  if (MaxSetVal == -1)
+  {
+    fprintf (stderr, "\nfilesets: ERROR: The max ID (-max) is a required option.\n");
+    usage();
+  }
 
   if (convertToPostfix (input, outputStack))
   {
@@ -937,7 +960,7 @@ main (int argc, char *argv[])
     }
     else
     {
-      fprintf (stderr, "\nfile-sets: Invalid input\n");
+      fprintf (stderr, "\nfile-sets: ERROR: Invalid input\n\t%s\n", cmdLine(argc, argv));
       exit(-1);
     }
     
