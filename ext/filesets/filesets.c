@@ -93,7 +93,7 @@ usage (void)
   fprintf(stderr, "  ( ( f1 X f2 X f3 ) U ( f4 x f5 ) D ( ( f6 x f7 ) U ( f8 X f9 ) )\n");
   fprintf(stderr, "\n");
   fprintf(stderr, "Notes:\n");
-  fprintf(stderr, "1) files must contain only integers separated by newlines\n");
+  fprintf(stderr, "1) files must contain only positive integers separated by newlines\n");
   fprintf(stderr, "2) all files, operators and parentheses must be separate by whitespace\n");
   fprintf(stderr, "3) operators must be upper case\n");
   fprintf(stderr, "4) operator definition\n");
@@ -240,6 +240,13 @@ setRead(Set * s)
       {
         *dstPtr = '\0';
         id = strtol(line, NULL, 10);
+
+        if (id > MaxSetVal)
+        {
+          fprintf (stderr, "\nfile-sets: ERROR: input data contains value greater than specified max ID\n\n");
+          exit(-1);
+        }
+
         if (id != LONG_MIN && id != LONG_MAX && id != 0)
           s->vector[id] = 1;
         dstPtr = line;
@@ -253,8 +260,15 @@ setRead(Set * s)
     {
       *dstPtr = '\0';
       id = strtol(line, NULL, 10);
+
+      if (id > MaxSetVal)
+      {
+        fprintf (stderr, "\nfile-sets: ERROR: input data contains value greater than specified max ID\n\n");
+        exit(-1);
+      }
+
       if (id != LONG_MIN && id != LONG_MAX && id != 0)
-	s->vector[id] = 1;
+        s->vector[id] = 1;
     }
 
     munmap(srcBase, statBuf.st_size);
@@ -932,7 +946,7 @@ main (int argc, char *argv[])
 
   if (MaxSetVal == -1)
   {
-    fprintf (stderr, "\nfilesets: ERROR: The max ID (-max) is a required option.\n");
+    fprintf (stderr, "\nfilesets: ERROR: The max ID (-max) is a required option and must be positive integer.\n");
     usage();
   }
 
