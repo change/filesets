@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    filesets (0.0.0)
+    filesets (0.0.4)
 
 GEM
   remote: http://rubygems.org/
