@@ -3,5 +3,8 @@
 result = Kernel.system(File.dirname(__FILE__) + "/../ext/filesets/filesets", *ARGV)
 if result.nil?
   puts "ERROR: filesets failed: status = #{$?}"
-  exit(1)
+  exit($?.exitstatus)
+elsif result == false
+  puts "ERROR: filesets returned non-zero exit status: status = #{$?}"
+  exit($?.exitstatus)
 end
